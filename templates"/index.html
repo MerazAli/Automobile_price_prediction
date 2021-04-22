@@ -94,7 +94,15 @@
 
               </form>
 
+                       
 
+              <div class ="row">
+                <div class="col-12",style="text-align:center">
+                  <h4> <span id ="prediction"> </span></h4>
+                  
+                </div>
+
+              </div>
 
 
           </div>
@@ -103,6 +111,72 @@
      </div>
 
  </div>
+
+
+
+
+<!--  In javascript for  load car models -->
+<script>
+
+function load_car_models (company_id, car_model_id) {
+        var company = document.getElementById(company_id);
+        var car_model = document.getElementById(car_model_id);
+
+
+        car_model.value="";
+        car_model.innerHTML ="";
+
+
+        console.log(company.value)
+        {% for company in companies %}
+            if( company.value == "{{ company }}")
+            {
+                {% for model in car_models %}
+                    {% if company in model %}
+
+                        var newOption = document.createElement("option");
+                        newOption.value = "{{ model }}";
+                        newOption.innerHTML = "{{ model }}";
+                        car_model.options.add(newOption);
+                    {% endif %}
+                {% endfor %}
+            }
+          {% endfor %}
+    }
+            
+                          <!--  onclick method create send_data function  -->
+                     
+                                                  
+                                     function form_handler (event) {
+                                      event.preventDefault();
+                                  }
+
+    function send_data() {
+        document.querySelector('form').addEventListener('submit', form_handler);
+
+        var fd = new FormData(document.querySelector("form"));
+
+        var xhr = new XMLHttpRequest({mozSystem: true});
+
+        xhr.open('POST', '/predict', true);
+        document.getElementById('prediction').innerHTML="Wait! Predincting the Price...";
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState == XMLHttpRequest.DONE){
+                document.getElementById('prediction').innerHTML="Prdicted Price: INR "+xhr.responseText;
+            }
+        };
+
+        xhr.onload = function(){};
+
+        xhr.send(fd);
+    }
+
+                     
+
+</script>
+
+
+
 
 
 
